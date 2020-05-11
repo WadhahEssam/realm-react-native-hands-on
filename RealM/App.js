@@ -5,6 +5,25 @@
  * @format
  * @flow strict-local
  */
+import Realm from 'realm';
+ 
+const CarSchema = {
+  name: 'Car',
+  properties: {
+    make:  'string',
+    model: 'string',
+    miles: {type: 'int', default: 0},
+  }
+};
+const PersonSchema = {
+  name: 'Person',
+  properties: {
+    name:     'string',
+    birthday: 'date',
+    cars:     'Car[]', // a list of Cars
+    picture:  'data?'  // optional property
+  }
+};
 
 import React from 'react';
 import {
@@ -17,56 +36,69 @@ import {
 } from 'react-native';
 
 import {
-  Header,
-  LearnMoreLinks,
   Colors,
-  DebugInstructions,
-  ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
 const App = () => {
+
+  // #1
+  // Realm.open({schema: [CarSchema, PersonSchema]})
+  //   .then(realm => {
+  //     // Create Realm objects and write to local storage
+  //     // realm.write(() => {
+  //     //   const myCar = realm.create('Car', {
+  //     //     make: 'Honda',
+  //     //     model: 'Civic',
+  //     //     miles: 1000,
+  //     //   });
+  //     //   myCar.miles += 20; // Update a property value
+  //     // });
+
+  //     // Query Realm for all cars with a high mileage
+  //     const cars = realm.objects('Car').filtered('miles > 1000');
+
+  //     console.log({ cars });
+  //     // Will return a Results object with our 1 car
+  //     cars.length // => 1
+
+  //     // Add another car
+  //     realm.write(() => {
+  //       const myCar = realm.create('Car', {
+  //         make: 'Ford',
+  //         model: 'Focus',
+  //         miles: 2000,
+  //       });
+  //     });
+
+  //     // Query results are updated in realtime
+  //     cars.length // => 2
+
+  //     // Remember to close the realm when finished.
+  //     realm.close();
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //   });
+
+  
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
+          style={styles.scrollView}
+        />
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            height: "100%"
+          }}>
+          <Text>Open Console</Text>
+        </View>
       </SafeAreaView>
     </>
   );
