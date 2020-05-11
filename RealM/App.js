@@ -6,23 +6,23 @@
  * @flow strict-local
  */
 import Realm from 'realm';
- 
+
 const CarSchema = {
   name: 'Car',
   properties: {
-    make:  'string',
+    make: 'string',
     model: 'string',
     miles: {type: 'int', default: 0},
-  }
+  },
 };
 const PersonSchema = {
   name: 'Person',
   properties: {
-    name:     'string',
+    name: 'string',
     birthday: 'date',
-    cars:     'Car[]', // a list of Cars
-    picture:  'data?'  // optional property
-  }
+    cars: 'Car[]', // a list of Cars
+    picture: 'data?', // optional property
+  },
 };
 
 const UserScheme = {
@@ -32,10 +32,10 @@ const UserScheme = {
     id: 'int',
     name: 'string',
     age: 'int',
-  }
+  },
 };
 
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -45,12 +45,9 @@ import {
   StatusBar,
 } from 'react-native';
 
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const App = () => {
-
   // #1
   // Realm.open({schema: [CarSchema, PersonSchema]})
   //   .then(realm => {
@@ -91,54 +88,64 @@ const App = () => {
       realm.write(() => {
         const newUser = realm.create('User', {
           id: 1,
-          name: "Wadah",
-          age: 24
-        })
+          name: 'Wadah',
+          age: 24,
+        });
         newUser.age += 1;
       });
 
       realm.write(() => {
         realm.create('User', {
           id: 2,
-          name: "Aiham",
-          age: 24
-        })
+          name: 'Aiham',
+          age: 24,
+        });
       });
 
       realm.write(() => {
         realm.create('User', {
           id: 3,
-          name: "Ahmed",
-          age: 24
-        })
-      });
-
-      console.log({ users: realm.objects('User').map(x => Object.assign({}, x)) }); 
-      const userByID = realm.objects('User').find(user => user.id == 1);
-      console.log({ userByID });
-
-      console.log(`Modifying Users With id more than 1`)
-      realm.write(() => {
-        realm.objects('User').filter(user => user.id > 1).forEach(user => {
-          user.name = `${user.name} (Edited)`
+          name: 'Ahmed',
+          age: 24,
         });
       });
-      console.log({ users: realm.objects('User').map(x => Object.assign({}, x)) }); 
 
-      console.log(`Deleting Use with name Aiham (Edited)`)
-      realm.write(() => {
-        const Aiham = realm.objects('User').find(user => user.name === 'Aiham (Edited)');
-        realm.delete(Aiham)
+      console.log({
+        users: realm.objects('User').map(x => Object.assign({}, x)),
       });
-      console.log({ users: realm.objects('User').map(x => Object.assign({}, x)) }); 
+      const userByID = realm.objects('User').find(user => user.id == 1);
+      console.log({userByID});
+
+      console.log(`Modifying Users With id more than 1`);
+      realm.write(() => {
+        realm
+          .objects('User')
+          .filter(user => user.id > 1)
+          .forEach(user => {
+            user.name = `${user.name} (Edited)`;
+          });
+      });
+      console.log({
+        users: realm.objects('User').map(x => Object.assign({}, x)),
+      });
+
+      console.log(`Deleting Use with name Aiham (Edited)`);
+      realm.write(() => {
+        const Aiham = realm
+          .objects('User')
+          .find(user => user.name === 'Aiham (Edited)');
+        realm.delete(Aiham);
+      });
+      console.log({
+        users: realm.objects('User').map(x => Object.assign({}, x)),
+      });
     })
     .catch(error => {
       console.log(error);
     });
 
   // Deletes all the database
-  Realm.deleteFile({ scheme: [UserScheme]});
-
+  Realm.deleteFile({scheme: [UserScheme]});
 
   return (
     <>
@@ -153,7 +160,7 @@ const App = () => {
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'column',
-            height: "100%"
+            height: '100%',
           }}>
           <Text>Open Console</Text>
         </View>
