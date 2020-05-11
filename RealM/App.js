@@ -25,7 +25,17 @@ const PersonSchema = {
   }
 };
 
-import React from 'react';
+const UserScheme = {
+  name: 'User',
+  primaryKey: 'id',
+  properties: {
+    id: 'int',
+    name: 'string',
+    age: 'int',
+  }
+};
+
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -53,26 +63,9 @@ const App = () => {
   //     //   });
   //     //   myCar.miles += 20; // Update a property value
   //     // });
-
   //     // Query Realm for all cars with a high mileage
   //     const cars = realm.objects('Car').filtered('miles > 1000');
-
-  //     console.log({ cars });
-  //     // Will return a Results object with our 1 car
-  //     cars.length // => 1
-
-  //     // Add another car
-  //     realm.write(() => {
-  //       const myCar = realm.create('Car', {
-  //         make: 'Ford',
-  //         model: 'Focus',
-  //         miles: 2000,
-  //       });
-  //     });
-
-  //     // Query results are updated in realtime
-  //     cars.length // => 2
-
+  //     console.log({ cars: realm.objects('Car').map(x => Object.assign({}, x)) });
   //     // Remember to close the realm when finished.
   //     realm.close();
   //   })
@@ -80,7 +73,72 @@ const App = () => {
   //     console.log(error);
   //   });
 
-  
+  // #2
+  // Realm.open({
+  //   schema: [{name: 'User', properties: {name: 'string', age: 'int'}}]
+  // }).then(realm => {
+  //   realm.write(() => {
+  //     realm.create('Dog', {name: 'Rex'});
+  //     realm.create('User', {name: 'Wadah', age: 10})
+  //   });
+  //   console.log({ users: realm.objects('User').length });
+  // });
+
+  // #3
+  Realm.open({schema: [UserScheme]})
+    .then(realm => {
+      console.log(`Adding Users`);
+      realm.write(() => {
+        const newUser = realm.create('User', {
+          id: 1,
+          name: "Wadah",
+          age: 24
+        })
+        newUser.age += 1;
+      });
+
+      realm.write(() => {
+        realm.create('User', {
+          id: 2,
+          name: "Aiham",
+          age: 24
+        })
+      });
+
+      realm.write(() => {
+        realm.create('User', {
+          id: 3,
+          name: "Ahmed",
+          age: 24
+        })
+      });
+
+      console.log({ users: realm.objects('User').map(x => Object.assign({}, x)) }); 
+      const userByID = realm.objects('User').find(user => user.id == 1);
+      console.log({ userByID });
+
+      console.log(`Modifying Users With id more than 1`)
+      realm.write(() => {
+        realm.objects('User').filter(user => user.id > 1).forEach(user => {
+          user.name = `${user.name} (Edited)`
+        });
+      });
+      console.log({ users: realm.objects('User').map(x => Object.assign({}, x)) }); 
+
+      console.log(`Deleting Use with name Aiham (Edited)`)
+      realm.write(() => {
+        const Aiham = realm.objects('User').find(user => user.name === 'Aiham (Edited)');
+        realm.delete(Aiham)
+      });
+      console.log({ users: realm.objects('User').map(x => Object.assign({}, x)) }); 
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+  // Deletes all the database
+  Realm.deleteFile({ scheme: [UserScheme]});
+
 
   return (
     <>
